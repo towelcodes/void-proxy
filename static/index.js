@@ -833,6 +833,13 @@ function opNT() {
   }
 }
 
+function gotoNative() {
+  if (ts.getActiveTab() == null) return;
+  let url = document.querySelector("input[id=adrbar]").placeholder;
+  console.log("NAV: Navigating to " + url);
+  window.location.href = url;
+}
+
 function addDropElem(name) {
   var select = document.getElementById("themeSelect");
   var option = document.createElement("option");
