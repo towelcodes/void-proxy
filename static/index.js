@@ -455,17 +455,7 @@ const openNewtab = () => {
 };
 
 let splashtext = [
-  "check out discord.gg/goabyss",
-  "made by paxton warin",
-  "want your own link? check out discord.gg/goabyss",
-  "thanks for using the site!",
-  "check out the settings page",
-  "check out the games page",
-  "check out the settings to hide from your teacher",
-  "need ChatGPT? search for it on the games page!",
-  "shoutout owen, ramsey, and levi",
-  "co owned by wyatt batdorf",
-  "enzo is interesting...",
+  "web.towel.codes"
 ]
 
 const runService = async (url, override, overrideadrbar) => {
