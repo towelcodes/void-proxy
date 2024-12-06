@@ -1,14 +1,10 @@
 {
-    "builds": [
-        {
-            "src": "index.mjs",
-            "use": "@vercel/node"
+    "functions": [
+        "index.mjs": {
+            "runtime": "@vercel/node"
         }
     ],
-    "routes": [
-        {
-          "src": "/(.*)",
-          "dest": "index.mjs"
-        }
-      ]
+    "rewrites": [
+        { "source": "/(*.)", "destination": "index.mjs" }
+    ]
 }
