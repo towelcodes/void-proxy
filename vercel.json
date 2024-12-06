@@ -1,9 +1,4 @@
 {
-    "functions": {
-        "index.mjs": {
-            "runtime": "@vercel/node"
-        }
-    },
     "rewrites": [
         { "source": "/(.*)", "destination": "index.mjs" }
     ]
