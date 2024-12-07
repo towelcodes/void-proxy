@@ -441,6 +441,9 @@ const runService = async (url, override, overrideadrbar) => {
   if (ts.getActiveTab() == null || url == "abyss://settings" || url == "abyss:settings" || url == "abyss:apps" || url== "abyss://apps") {
     openNewtab();
   }
+  try {
+    umami.track("Navigate", { url: url });
+  } catch (e) { }
   const activeTab = ts.getActiveTab();
   if (activeTab) {
     const tabElement = activeTab.getTabElement();
