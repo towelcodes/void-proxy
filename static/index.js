@@ -46,28 +46,6 @@ function particleSelect(param) {
 
 }
 
-var chosenAdState = localStorage.getItem("adState") || "adchangeon";
-
-if (chosenAdState === "adchangeon") {
-  var script = document.createElement('script');
-  script.type = 'text/javascript';
-  script.src = '//pl22667078.highcpmgate.com/ed/d6/27/edd627939d21229c8335c92b2a743aa7.js';
-  document.head.appendChild(script);
-} 
-
-function adChange(parse) {
-  localStorage.setItem("adState", parse);
-  chosenAdState = parse;
-  document.querySelectorAll(".adchangeon, .adchangeoff").forEach((e) => {
-    e.classList.remove("active");
-  });
-  document.querySelectorAll("." + parse).forEach((e) => {
-    e.classList.add("active");
-}
-  )
-}
-
-
 var autoLaunchCookie = localStorage.getItem("autolaunch") || "off";
 
 function autoLaunch() {
