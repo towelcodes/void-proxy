@@ -5,10 +5,10 @@ import http from "http";
 import { dirname, join } from "path";
 import { hostname } from "node:os";
 import { fileURLToPath } from "url";
+import path from "path";
 import compression from 'compression';
 import chalk from 'chalk';
 import 'dotenv/config'
-
 
 let port = parseInt(process.env.PORT || "");
 
@@ -19,13 +19,15 @@ const app = express();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
+const rootPath = path.resolve(__dirname, "../");
 
 app.use(compression());
-app.use(express.static(__dirname + "/static/"));
-app.use("/class/", express.static(__dirname + "/services/uv/"));
-app.use("/work/", express.static(__dirname + "/services/dynamic/"));
+app.use(express.static(path.join(rootPath, "static")));
+app.use("/class/", express.static(path.join(rootPath, "services", "uv")));
+app.use("/work/", express.static(path.join(rootPath, "services", "dynamic")));
 
 app.use((req, res) => {
+  console.log(req);
   res.status(404);
   res.send(
     `<style>body{font-family:Roboto,sans-serif;background-color:#111;text-align:center;padding:50px;}.container{background-color:#111;border-radius:5px;box-shadow:0px 0px 10px rgba(0,0,0,0.1);padding:20px;}h1{font-size:48px;color:#fff;margin-bottom:20px;}p{font-size:18px;color:#fff;}a{text-decoration:none;color:lightgreen;}a:hover{text-decoration:underline;}</style><div class="container"><h1>404 :(</h1><p>The page you are looking for might have been removed or does not exist. If you opened Abyss inside of Abyss, this page will also show up.</p><p>Open a new tab to continue.</a></p></div>`
@@ -77,6 +79,8 @@ function shutdown() {
   process.exit(0);
 }
 
-server.listen({
-  port,
-});
+module.exports = app;
+
+// server.listen({
+//   port,
+// });

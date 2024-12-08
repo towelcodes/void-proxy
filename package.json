@@ -2,9 +2,9 @@
   "name": "abyss",
   "version": "6.0.0",
   "description": "",
-  "main": "index.mjs",
+  "main": "api/index.mjs",
   "scripts": {
-    "start": "node index.mjs"
+    "start": "node api/index.mjs"
   },
   "keywords": [],
   "author": "",
