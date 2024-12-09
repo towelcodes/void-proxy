@@ -7,8 +7,8 @@ import { hostname } from "node:os";
 import { fileURLToPath } from "url";
 import compression from 'compression';
 import chalk from 'chalk';
-import 'dotenv/config'
 
+const commit = process.env.VERCEL_GIT_COMMIT_SHA || "unknown"
 
 let port = parseInt(process.env.PORT || "");
 
@@ -24,6 +24,12 @@ app.use(compression());
 app.use(express.static(__dirname + "/static/"));
 app.use("/class/", express.static(__dirname + "/services/uv/"));
 app.use("/work/", express.static(__dirname + "/services/dynamic/"));
+
+app.use("/api/version", (req, res) => {
+  res.json({
+    commit: commit
+  });
+});
 
 app.use((req, res) => {
   res.status(404);

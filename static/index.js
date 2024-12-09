@@ -12,15 +12,27 @@ tHs.setActiveTheme(darkTheme);
 
 let workerLoaded;
 
-async function worker() {
-  return await navigator.serviceWorker.register("/sw.js", {
+async function proxyWorker() {
+  return await navigator.serviceWorker.register("/proxy_sw.js", {
     scope: "/classes",
   });
 }
 
 document.addEventListener("DOMContentLoaded", async function () {
-  await worker();
+  await proxyWorker();
   workerLoaded = true;
+
+  // ok now we load the service worker that caches the app
+  const sw = navigator.serviceWorker.register("/sw.js").then(() => {
+    navigator.serviceWorker.controller.postMessage({ type: "wakeUp" });
+  });
+
+
+  // fetch version from server
+  // actually no do it i nthe rservice worker
+  navigator.serviceWorker.addEventListener("message", (e) => {
+    console.log("message from sw", e.data);
+  });
 });
 
 function prependHttps(url) {
@@ -29,8 +41,8 @@ function prependHttps(url) {
   }
   return url;
 }
-var chosenParticleState = localStorage.getItem("particleState") || "on";
 
+var chosenParticleState = localStorage.getItem("particleState") || "off";
 
 document.addEventListener("DOMContentLoaded", function (event) {
   if (chosenParticleState === "on") {

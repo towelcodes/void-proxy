@@ -48,3 +48,4 @@ logs
 # code-alt's extensions
 .history/
 .vercel
+/.commit-hash

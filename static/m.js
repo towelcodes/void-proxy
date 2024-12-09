@@ -14,13 +14,13 @@ function go(url) {
 }
 
 async function worker() {
-    return await navigator.serviceWorker.register("/sw.js", {
-      scope: "/classes",
-    });
-  }
-
-  document.addEventListener("DOMContentLoaded", async function () {
-    await worker();
-    workerLoaded = true;
+  return await navigator.serviceWorker.register("/sw.js", {
+    scope: "/classes",
   });
+}
+
+document.addEventListener("DOMContentLoaded", async function () {
+  await worker();
+  workerLoaded = true;
+});
   
