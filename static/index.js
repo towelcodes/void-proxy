@@ -35,8 +35,8 @@ async function awaitActiveSW(registration) {
 
 function processSWMessage(message) {
   if (message.type === "status") {
-    document.getElementById("commit").innerText = message.localCommit;
-    document.getElementById("remoteCommit").innerText = message.remoteCommit;
+    document.getElementById("commit").innerText = message.localCommit.substring(0, 7);
+    document.getElementById("remoteCommit").innerText = message.remoteCommit.substring(0, 7);
   } else if (message.type === "updateStatus") {
     if (message.update) {
       document.getElementById("updateStatus").innerText = "update ready!";
