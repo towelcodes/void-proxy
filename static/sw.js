@@ -93,13 +93,19 @@ const checkAndUpdateCache = async () => {
     const remoteCommit = await getRemoteCommit();
 
     if (localCommit !== remoteCommit) {
+      clientMsg({
+        type: "updateStatus",
+        update: true
+      });
+
       await cacheResources(cachableResources);
       await setLocalCommit(remoteCommit);
+    } else {
+      clientMsg({
+        type: "updateStatus",
+        update: false
+      });
     }
-
-    clientMsg({
-      type: "updateRequired"
-    });
   } catch (e) {
     console.error("checking for updates failed", e);
 
@@ -117,23 +123,15 @@ self.addEventListener("activate", (e) => {
   console.log("activating");
   e.waitUntil(Promise.all([
     self.clients.claim(),
-    async () => {
-      console.log("checkpoint");
-      clientMsg({
-        type: "status",
-        localCommit: await getLocalCommit(),
-        remoteCommit: await getRemoteCommit(),
-      });
-    }
-    // checkAndUpdateCache()
   ]));
-  console.log("activated");
+  console.log("activated worker");
 });
 
 self.addEventListener("fetch", (e) => {
-  if (e.request.mode === "navigate") {
-    e.waitUntil(checkAndUpdateCache());
-  }
+  // drop this in favour of manually requesting updates on page load from main script
+  // if (e.request.mode === "navigate") {
+  //   e.waitUntil(checkAndUpdateCache());
+  // }
   e.respondWith(
       caches.match(e.request).then((response) => {
         if (response) {
@@ -145,7 +143,7 @@ self.addEventListener("fetch", (e) => {
 });
 
 self.addEventListener("message", async (e) => {
-  console.log("sw recieved message", e.data);
+  console.log("sw received message", e.data);
   if (e.data.type === "wakeUp") {
     clientMsg({
       type: "status",
@@ -153,5 +151,7 @@ self.addEventListener("message", async (e) => {
       remoteCommit: await getRemoteCommit(),
     });
     await checkAndUpdateCache();
+  } else if (e.data.type === "skipWaiting") {
+    await self.skipWaiting();
   }
 });

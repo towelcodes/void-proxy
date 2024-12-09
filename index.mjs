@@ -8,6 +8,8 @@ import { fileURLToPath } from "url";
 import compression from 'compression';
 import chalk from 'chalk';
 
+// for testing purposes, will return a random commit hash to make the client think a new version is always available
+const random_commit = process.env.RANDOM_COMMIT || "false";
 const commit = process.env.VERCEL_GIT_COMMIT_SHA || "unknown"
 
 let port = parseInt(process.env.PORT || "");
@@ -30,6 +32,12 @@ app.use("/class/", express.static(__dirname + "/services/uv/"));
 app.use("/work/", express.static(__dirname + "/services/dynamic/"));
 
 app.use("/api/version", (req, res) => {
+  if (random_commit === "true") {
+    res.json({
+      commit: Math.random().toString(36).substring(7)
+    });
+    return;
+  }
   res.json({
     commit: commit
   });

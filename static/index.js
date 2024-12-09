@@ -18,20 +18,63 @@ async function proxyWorker() {
   });
 }
 
+/**
+ * waits for the service worker to be active and then returns the ServiceWorker
+ * @param registration {ServiceWorkerRegistration}
+ * @returns {ServiceWorker}
+ */
+async function awaitActiveSW(registration) {
+  console.log("awaiting active service worker", registration);
+  let active = registration.active;
+  while (!active) {
+    await new Promise((res) => setTimeout(res, 100));
+    active = registration.active;
+  }
+  return active;
+}
+
+function processSWMessage(message) {
+  if (message.type === "status") {
+    document.getElementById("commit").innerText = message.localCommit;
+    document.getElementById("remoteCommit").innerText = message.remoteCommit;
+  } else if (message.type === "updateStatus") {
+    if (message.update) {
+      document.getElementById("updateStatus").innerText = "update ready!";
+    } else {
+      document.getElementById("updateStatus").innerText = "no update available";
+    }
+  }
+}
+
 document.addEventListener("DOMContentLoaded", async function () {
   await proxyWorker();
   workerLoaded = true;
 
   // ok now we load the service worker that caches the app
-  const sw = navigator.serviceWorker.register("/sw.js").then(() => {
-    navigator.serviceWorker.controller.postMessage({ type: "wakeUp" });
+  const reg = await navigator.serviceWorker.register("/sw.js");
+  reg.addEventListener("updatefound", () => {
+    const newWorker = reg.installing;
+    if (newWorker) {
+      newWorker.addEventListener("statechange", () => {
+        if (newWorker.state === "installed" && navigator.serviceWorker.controller) {
+          console.log("telling new worker to skip waiting");
+          newWorker.postMessage({ type: "skipWaiting" });
+          if (document.getElementById("updateStatus").innerText === "no update available") {
+            document.getElementById("updateStatus").innerText = "update ready! [sw]";
+          } else {
+            document.getElementById("updateStatus").innerText += "[sw]";
+          }
+        }
+      });
+    }
   });
 
+  const sw = await awaitActiveSW(reg)
+  sw.postMessage({ type: "wakeUp" });
 
-  // fetch version from server
-  // actually no do it i nthe rservice worker
   navigator.serviceWorker.addEventListener("message", (e) => {
     console.log("message from sw", e.data);
+    processSWMessage(e.data);
   });
 });
 
