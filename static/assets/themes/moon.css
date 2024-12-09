@@ -303,6 +303,15 @@ _::-webkit-full-page-media, _:future, :root #adrbar {
   cursor: pointer;
 }
 
+a:link, a:visited {
+  color: var(--color);
+  text-decoration: underline;
+}
+
+a:hover {
+  text-decoration: none;
+}
+
 #adrbar {
   width: 100%;
   height: 30px;
