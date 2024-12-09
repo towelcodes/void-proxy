@@ -53,10 +53,25 @@ function processSWMessage(message) {
 
 function forceRecache() {
   document.getElementById("recacheBtn").innerText = "recaching...";
-  if (workerLoaded) {
+  if ("serviceWorker" in navigator) {
     navigator.serviceWorker.controller.postMessage({ type: "forceRecache" });
   } else {
     document.getElementById("recacheBtn").innerText = "sw unavailable";
+  }
+}
+
+function unregisterWorker() {
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.getRegistrations().then((registrations) => {
+      let removed = 0;
+      registrations.forEach((reg) => {
+        reg.unregister().then(success => {
+          removed++;
+          console.log("unregistered worker", success);
+          document.getElementById("unregisterBtn").innerText = "unregistered " + removed + "/" + registrations.length;
+        });
+      });
+    });
   }
 }
 
