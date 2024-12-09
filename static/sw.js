@@ -36,7 +36,7 @@ const getRemoteCommit = async () => {
 }
 
 /**
- * @returns {Promise<string || null>}
+ * @returns {Promise<string>}
  */
 const getLocalCommit = () => {
   return getDB().then((db) => {
@@ -44,7 +44,7 @@ const getLocalCommit = () => {
       const tx = db.transaction("meta", "readonly");
       const store = tx.objectStore("meta");
       const req = store.get("commit");
-      req.onsuccess = () => res(req.result?.value || null);
+      req.onsuccess = () => res(req.result?.value ?? "unknown");
       req.onerror = () => rej(req.error);
     });
   });
@@ -84,6 +84,7 @@ const cachableResources = [
   "/particles.js",
   "/proxy_sw.js",
   "/pwa.js",
+  "/assets/themes/moon.css"
 ];
 
 const checkAndUpdateCache = async () => {
@@ -113,9 +114,11 @@ const checkAndUpdateCache = async () => {
 }
 
 self.addEventListener("install", (e) => {
-  e.waitUntil(
-      cacheResources(cachableResources)
-  );
+  e.waitUntil(Promise.all([
+      cacheResources(cachableResources),
+      async () =>
+        await setLocalCommit(await getRemoteCommit())
+  ]));
   console.log("installed");
 });
 
