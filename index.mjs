@@ -21,6 +21,10 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 app.use(compression());
+app.use((req, res, next) =>  {
+  res.setHeader("Cache-Control", "no-cache");
+  next();
+});
 app.use(express.static(__dirname + "/static/"));
 app.use("/class/", express.static(__dirname + "/services/uv/"));
 app.use("/work/", express.static(__dirname + "/services/dynamic/"));
