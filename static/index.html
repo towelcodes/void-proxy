@@ -384,6 +384,7 @@
         </div>
         <p>
           <a class="footer-link" onclick="location.reload(true)">force reload</a>
+          <a class="footer-link" id="recacheBtn" onclick="forceRecache()">force recache</a>
         </p>
         <p style="font-size: 16px;
         font-weight: 300;
@@ -394,7 +395,7 @@
         text-decoration: none; ">
           void-proxy@<a id="commit">unknown</a>
           <br/>a fork of <a href="https://github.com/AbyssServices/Abyss-Web">abyss</a> by <a href="https://towel.codes">towel.codes</a>
-          <br/><span id="updateStatus">connecting...</span> | <span id="remoteCommit">remote: unknown</span>
+          <br/><span id="updateStatus">connecting...</span> | <span id="remoteCommit">remote: unknown</span> <span id="generalStatus"></span>
         </p>
 
       </div>

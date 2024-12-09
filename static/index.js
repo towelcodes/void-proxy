@@ -39,10 +39,24 @@ function processSWMessage(message) {
     document.getElementById("remoteCommit").innerText = message.remoteCommit.substring(0, 7);
   } else if (message.type === "updateStatus") {
     if (message.update) {
-      document.getElementById("updateStatus").innerText = "update ready!";
+      if (!message.manual) {
+        document.getElementById("updateStatus").innerText = "update ready!";
+      } else {
+        document.getElementById("recacheBtn").innerText = "force recache";
+        document.getElementById("updateStatus").innerText = "recache ready!";
+      }
     } else {
       document.getElementById("updateStatus").innerText = "no update available";
     }
+  }
+}
+
+function forceRecache() {
+  document.getElementById("recacheBtn").innerText = "recaching...";
+  if (workerLoaded) {
+    navigator.serviceWorker.controller.postMessage({ type: "forceRecache" });
+  } else {
+    document.getElementById("recacheBtn").innerText = "sw unavailable";
   }
 }
 

@@ -96,7 +96,8 @@ const checkAndUpdateCache = async () => {
     if (localCommit !== remoteCommit) {
       clientMsg({
         type: "updateStatus",
-        update: true
+        update: true,
+        manual: false
       });
 
       await cacheResources(cachableResources);
@@ -104,7 +105,8 @@ const checkAndUpdateCache = async () => {
     } else {
       clientMsg({
         type: "updateStatus",
-        update: false
+        update: false,
+        manual: false
       });
     }
   } catch (e) {
@@ -156,5 +158,16 @@ self.addEventListener("message", async (e) => {
     await checkAndUpdateCache();
   } else if (e.data.type === "skipWaiting") {
     await self.skipWaiting();
+  } else if (e.data.type === "forceRecache") {
+    clientMsg({
+      type: "working",
+    })
+    await caches.delete("void-cache");
+    await cacheResources(cachableResources);
+    clientMsg({
+      type: "updateStatus",
+      update: true,
+      manual: true
+    })
   }
 });
