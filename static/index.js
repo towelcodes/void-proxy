@@ -177,7 +177,7 @@ function setBackend(backend) {
 
 
 
-var engineSelected = localStorage.getItem("engine") || "Google";
+var engineSelected = localStorage.getItem("engine") || "Bing";
 var currentSearchURL = "https://www.google.com/search?q="
 function engineSwitch(sel) {
   localStorage.setItem("engine", sel.value);
